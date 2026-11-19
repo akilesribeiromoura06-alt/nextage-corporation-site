@@ -46,7 +46,7 @@ export const empresa = {
       cargo: "Desenvolvedor de Software",
       foto: "/images/akiles.jpg",
       alt: "Foto de Akiles Ribeiro Moura",
-      descricao: "Desenvolve os sistemas, sites e soluções digitais da Nextage."
+      descricao: "Desenvolve sistemas, sites e soluções digitais para a Nextage Corporation."
     },
     {
       nome: "Clarke Griffin",
