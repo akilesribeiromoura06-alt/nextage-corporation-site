@@ -61,6 +61,13 @@ export const empresa = {
       foto: "/images/walter.jpg",
       alt: "Foto de Walter Hartwell White",
       descricao: "Cuida do suporte aos clientes e da infraestrutura que mantém as soluções no ar."
+    },
+    {
+      nome: "Lula",
+      cargo: "Diretor de Economia e Estratégia Financeira",
+      foto: "/images/lula.jpg",
+      alt: "Foto de Lula, Diretor de Economia e Estratégia Financeira",
+      descricao: "Cuida do planejamento financeiro e dos investimentos da Nextage Corporation."
     }
   ]
 };
