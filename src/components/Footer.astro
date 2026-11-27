@@ -2,73 +2,149 @@
 import { empresa } from '../data/empresa.js';
 
 const anoAtual = new Date().getFullYear();
+const telefoneLimpo = empresa.contato.telefone.replace(/\D/g, '');
 ---
 
-<footer class="rodape">
+<footer class="rodape escuro">
   <div class="faixa-topo"></div>
+  <div class="rodape-fundo" aria-hidden="true"></div>
+
   <div class="container rodape-container">
     <div class="rodape-marca">
       <h2>{empresa.nome}</h2>
-      <p>&copy; {anoAtual} {empresa.nome}. Todos os direitos reservados.</p>
+      <p class="slogan">{empresa.slogan}</p>
     </div>
 
-    <div class="rodape-contato">
-      <p>{empresa.contato.endereco.logradouro}</p>
-      <p>{empresa.contato.endereco.bairro}</p>
-      <p>{empresa.contato.endereco.cidadeEstado}</p>
-      <div class="links-contato">
-        <a href={`mailto:${empresa.contato.email}`}>{empresa.contato.email}</a>
-        <p>{empresa.contato.telefone}</p>
-      </div>
+    <div class="rodape-coluna">
+      <h3>Navegação</h3>
+      <ul>
+        <li><a href="/">Início</a></li>
+        <li><a href="/sobre">Sobre</a></li>
+        <li><a href="/equipe">Equipe</a></li>
+        <li><a href="/contato">Contato</a></li>
+      </ul>
+    </div>
+
+    <div class="rodape-coluna">
+      <h3>Contato</h3>
+      <address>
+        <p>{empresa.contato.endereco.logradouro}</p>
+        <p>{empresa.contato.endereco.bairro} — {empresa.contato.endereco.cidadeEstado}</p>
+        <p><a href={`mailto:${empresa.contato.email}`}>{empresa.contato.email}</a></p>
+        <p><a href={`tel:+55${telefoneLimpo}`}>{empresa.contato.telefone}</a></p>
+      </address>
+    </div>
+  </div>
+
+  <div class="rodape-base">
+    <div class="container">
+      <p>&copy; {anoAtual} {empresa.nome}. Todos os direitos reservados.</p>
     </div>
   </div>
 </footer>
 
 <style>
   .rodape {
-    background-color: var(--cor-primaria);
-    color: var(--cor-texto-invertido);
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
     margin-top: auto;
+    background: linear-gradient(180deg, var(--cor-primaria), var(--cor-fundo-escuro));
   }
 
-  .faixa-topo {
-    height: 4px;
-    background: var(--degrade-marca);
+  /* Grade tecnológica sutil no fundo */
+  .rodape-fundo {
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background-image:
+      linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+    -webkit-mask-image: linear-gradient(180deg, transparent, #000 40%, transparent);
+    mask-image: linear-gradient(180deg, transparent, #000 40%, transparent);
   }
 
   .rodape-container {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    gap: 2rem;
-    padding: 3rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1.4fr 1fr 1.4fr;
+    gap: 3rem;
+    padding-top: 4rem;
+    padding-bottom: 3rem;
   }
 
   .rodape-marca h2 {
-    color: var(--cor-texto-invertido);
+    font-size: 1.6rem;
     margin-bottom: 0.5rem;
+    background: var(--degrade-marca-vivo);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: fluxo 6s linear infinite;
   }
 
-  .rodape-marca p, .rodape-contato p {
+  .slogan {
     color: var(--cor-texto-invertido-suave);
-    font-size: 0.875rem;
-    margin-bottom: 0.25rem;
+    max-width: 320px;
+    font-size: 0.95rem;
   }
 
-  .links-contato {
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-    margin-top: 1rem;
+  .rodape-coluna h3 {
+    font-size: 0.85rem;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--cor-destaque);
+    margin-bottom: 1.25rem;
   }
 
-  .links-contato a {
-    color: var(--cor-texto-invertido);
-    text-decoration: none;
+  .rodape-coluna ul {
+    list-style: none;
   }
 
-  .links-contato a:hover {
+  .rodape-coluna li {
+    margin-bottom: 0.6rem;
+  }
+
+  address {
+    font-style: normal;
+  }
+
+  .rodape-coluna p {
     color: var(--cor-texto-invertido-suave);
-    text-decoration: underline;
+    font-size: 0.95rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .rodape-coluna a {
+    position: relative;
+    color: var(--cor-texto-invertido-suave);
+    transition: color 0.2s ease, padding-left 0.3s var(--ease);
+  }
+
+  .rodape-coluna a:hover {
+    color: #fff;
+  }
+
+  .rodape-coluna ul a:hover {
+    padding-left: 0.5rem;
+  }
+
+  .rodape-base {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 1.25rem 0;
+  }
+
+  .rodape-base p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--cor-texto-invertido-suave);
+  }
+
+  @media (max-width: 820px) {
+    .rodape-container {
+      grid-template-columns: 1fr;
+      gap: 2rem;
+    }
   }
 </style>

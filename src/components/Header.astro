@@ -7,7 +7,7 @@ const currentPath = Astro.url.pathname;
 <header class="cabecalho">
   <div class="faixa-topo"></div>
   <div class="container cabecalho-container">
-    <a href="/">
+    <a href="/" class="logo-link" aria-label={`Página inicial da ${empresa.nome}`}>
       <img
         src="/images/logo.png"
         alt={`Logotipo da ${empresa.nome}`}
@@ -15,62 +15,200 @@ const currentPath = Astro.url.pathname;
       />
     </a>
 
+    <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+
     <nav class="navegacao">
       <ul>
         <li><a href="/" class:list={[{ ativo: currentPath === '/' }]}>Início</a></li>
         <li><a href="/sobre" class:list={[{ ativo: currentPath.startsWith('/sobre') }]}>Sobre</a></li>
         <li><a href="/equipe" class:list={[{ ativo: currentPath.startsWith('/equipe') }]}>Equipe</a></li>
-        <li><a href="/contato" class:list={[{ ativo: currentPath.startsWith('/contato') }]}>Contato</a></li>
+        <li><a href="/contato" class:list={['nav-cta', { ativo: currentPath.startsWith('/contato') }]}>Contato</a></li>
       </ul>
     </nav>
   </div>
 </header>
 
 <style>
-  .faixa-topo {
-    height: 4px;
-    background: var(--degrade-marca);
+  .cabecalho {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background: rgba(255, 255, 255, 0.85);
+    -webkit-backdrop-filter: saturate(180%) blur(14px);
+    backdrop-filter: saturate(180%) blur(14px);
+    border-bottom: 1px solid transparent;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease;
   }
 
-  .cabecalho {
-    background-color: var(--cor-fundo);
-    border-bottom: 1px solid var(--cor-borda);
-    padding-bottom: 1rem;
+  .cabecalho.rolado {
+    border-bottom-color: var(--cor-borda);
+    box-shadow: 0 10px 30px -14px rgba(11, 31, 63, 0.35);
   }
 
   .cabecalho-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    flex-wrap: wrap;
     gap: 1.5rem;
-    padding-top: 1.5rem;
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
   }
 
-  .logo-img {
-    height: 60px;
-    width: auto;
+  .logo-link {
     display: block;
   }
 
+  .logo-img {
+    height: 52px;
+    width: auto;
+    display: block;
+    /* o fundo branco da logo some sobre o header translúcido */
+    mix-blend-mode: multiply;
+    transition: height 0.3s var(--ease), transform 0.3s var(--ease);
+  }
+
+  .rolado .logo-img {
+    height: 42px;
+  }
+
+  .logo-link:hover .logo-img {
+    transform: scale(1.04);
+  }
+
+  /* ---------- Navegação ---------- */
   .navegacao ul {
     list-style: none;
     display: flex;
-    flex-wrap: wrap;
-    gap: 1.5rem;
+    align-items: center;
+    gap: 0.5rem;
   }
 
   .navegacao a {
-    font-weight: 600;
+    position: relative;
+    display: block;
+    font-family: var(--fonte-titulo);
+    font-weight: 500;
     color: var(--cor-texto);
-    padding: 0.5rem 0;
-    border-bottom: 2px solid transparent;
+    padding: 0.5rem 1rem;
+    border-radius: 999px;
+    transition: color 0.2s ease, background-color 0.2s ease;
+  }
+
+  /* Linha animada que cresce no hover */
+  .navegacao a::after {
+    content: '';
+    position: absolute;
+    left: 1rem;
+    right: 1rem;
+    bottom: 0.2rem;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--degrade-marca);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.35s var(--ease);
   }
 
   .navegacao a:hover,
   .navegacao a.ativo {
     color: var(--cor-secundaria);
-    border-bottom-color: var(--cor-secundaria);
-    text-decoration: none;
+  }
+
+  .navegacao a:hover::after,
+  .navegacao a.ativo::after {
+    transform: scaleX(1);
+  }
+
+  /* Botão "Contato" em destaque */
+  .navegacao a.nav-cta {
+    margin-left: 0.5rem;
+    color: #fff;
+    background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-azul-vivo));
+    box-shadow: 0 8px 22px -10px rgba(31, 176, 232, 0.9);
+    transition: box-shadow 0.3s ease, transform 0.3s var(--ease);
+  }
+
+  .navegacao a.nav-cta::after {
+    display: none;
+  }
+
+  .navegacao a.nav-cta:hover,
+  .navegacao a.nav-cta.ativo {
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px -8px rgba(31, 176, 232, 1);
+  }
+
+  /* ---------- Menu mobile ---------- */
+  .menu-toggle {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border: 1px solid var(--cor-borda);
+    border-radius: 12px;
+    background: #fff;
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+  }
+
+  .menu-toggle span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    border-radius: 2px;
+    background: var(--cor-primaria);
+    transition: transform 0.3s var(--ease), opacity 0.2s ease;
+  }
+
+  .menu-toggle.aberto span:nth-child(1) {
+    transform: translateY(7px) rotate(45deg);
+  }
+  .menu-toggle.aberto span:nth-child(2) {
+    opacity: 0;
+  }
+  .menu-toggle.aberto span:nth-child(3) {
+    transform: translateY(-7px) rotate(-45deg);
+  }
+
+  @media (max-width: 820px) {
+    .menu-toggle {
+      display: flex;
+    }
+
+    .navegacao {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.97);
+      border-bottom: 1px solid var(--cor-borda);
+      box-shadow: 0 20px 40px -20px rgba(11, 31, 63, 0.4);
+      padding: 1rem 1.5rem 1.5rem;
+      opacity: 0;
+      translate: 0 -12px;
+      pointer-events: none;
+      transition: opacity 0.3s ease, translate 0.3s var(--ease);
+    }
+
+    .navegacao.aberto {
+      opacity: 1;
+      translate: 0 0;
+      pointer-events: auto;
+    }
+
+    .navegacao ul {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .navegacao a.nav-cta {
+      margin: 0.5rem 0 0;
+      text-align: center;
+    }
   }
 </style>

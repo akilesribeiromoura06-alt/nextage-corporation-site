@@ -2,59 +2,399 @@
 import LayoutBase from '../layouts/LayoutBase.astro';
 import Cartao from '../components/Cartao.astro';
 import { empresa } from '../data/empresa.js';
+
+// Divide o slogan em palavras para animar uma por uma
+const palavras = empresa.slogan.split(' ');
+const destacar = /ideias|soluções/i;
+
+// Valores repetidos 2x para o letreiro rolar sem emendas
+const itensLetreiro = [...empresa.valores, ...empresa.valores];
 ---
 
 <LayoutBase
   titulo="Início"
   descricao={`Bem-vindo à ${empresa.nome}. ${empresa.slogan}`}
 >
-  <section class="hero">
-    <div class="container">
-      <h1>{empresa.slogan}</h1>
-      <p class="hero-descricao">{empresa.missao}</p>
-      <a href="/contato" class="btn">Fale Conosco</a>
+  <!-- ===================== HERO ===================== -->
+  <section class="hero escuro" data-hero>
+    <canvas class="hero-canvas" data-particulas aria-hidden="true"></canvas>
+    <div class="hero-grade" aria-hidden="true"></div>
+    <div class="hero-brilho" aria-hidden="true"></div>
+
+    <div class="container hero-layout">
+      <div class="hero-texto">
+        <span class="selo"><span class="selo-ponto"></span>Soluções digitais sob medida</span>
+
+        <h1 class="hero-titulo">
+          {palavras.map((palavra, i) => (
+            <Fragment>
+              <span class:list={['palavra', { destaque: destacar.test(palavra) }]} style={`--i:${i}`}>{palavra}</span>{' '}
+            </Fragment>
+          ))}
+        </h1>
+
+        <p class="hero-descricao">{empresa.missao}</p>
+
+        <div class="hero-botoes">
+          <a href="/contato" class="btn">
+            Fale Conosco
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+          </a>
+          <a href="/sobre" class="btn btn-fantasma">Conheça a empresa</a>
+        </div>
+      </div>
+
+      <!-- Anel inspirado na logo (o "C" com os dois pontos) -->
+      <div class="hero-visual" aria-hidden="true">
+        <div class="hero-anel">
+          <svg viewBox="0 0 400 400">
+            <defs>
+              <linearGradient id="gradAnel" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#22d3ee" />
+                <stop offset="1" stop-color="#2a4fd6" />
+              </linearGradient>
+              <linearGradient id="gradN" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stop-color="#ffffff" />
+                <stop offset="1" stop-color="#8fdcff" />
+              </linearGradient>
+            </defs>
+
+            <circle class="anel-pontilhado" cx="200" cy="200" r="195" fill="none" stroke="rgba(143,220,255,0.35)" stroke-width="1.5" stroke-dasharray="3 10" />
+
+            <g class="anel-giro">
+              <circle cx="200" cy="200" r="170" fill="none" stroke="url(#gradAnel)" stroke-width="14" stroke-linecap="round" stroke-dasharray="800 268" transform="rotate(45 200 200)" />
+              <circle cx="320" cy="320" r="13" fill="#2a4fd6" />
+              <circle cx="319" cy="79" r="13" fill="#22d3ee" />
+            </g>
+
+            <circle class="anel-interno" cx="200" cy="200" r="125" fill="none" stroke="rgba(31,176,232,0.35)" stroke-width="1.5" stroke-dasharray="40 14" />
+
+            <polygon class="letra-n" points="150,260 150,140 180,140 222,208 222,140 250,140 250,260 220,260 178,192 178,260" fill="url(#gradN)" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <a href="#publico" class="rolar-dica" aria-label="Rolar para baixo">
+      <span class="rolar-mouse"><span class="rolar-roda"></span></span>
+    </a>
+  </section>
+
+  <!-- ===================== LETREIRO DE VALORES ===================== -->
+  <section class="letreiro" aria-label="Nossos valores">
+    <div class="letreiro-trilha">
+      {itensLetreiro.map((valor) => (
+        <span class="letreiro-item"><i class="losango"></i>{valor.titulo}</span>
+      ))}
     </div>
   </section>
 
-  <section class="publico secao secao-alt">
+  <!-- ===================== QUEM ATENDEMOS ===================== -->
+  <section id="publico" class="publico secao secao-alt">
     <div class="container">
-      <h2>Quem Atendemos</h2>
-      <Cartao>
+      <div data-reveal>
+        <span class="rotulo">Nosso público</span>
+        <h2 class="titulo-secao">Quem Atendemos</h2>
+      </div>
+      <Cartao destaque={true}>
         <p class="texto-publico">{empresa.publicoAlvo}</p>
       </Cartao>
+    </div>
+  </section>
+
+  <!-- ===================== CHAMADA FINAL ===================== -->
+  <section class="chamada escuro" data-hero>
+    <div class="hero-grade" aria-hidden="true"></div>
+    <div class="hero-brilho" aria-hidden="true"></div>
+    <div class="container chamada-conteudo" data-reveal>
+      <h2>Pronto para transformar sua ideia em solução?</h2>
+      <p>Conte para a gente o que o seu negócio precisa e vamos construir juntos.</p>
+      <a href="/contato" class="btn">
+        Começar agora
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6" /></svg>
+      </a>
     </div>
   </section>
 </LayoutBase>
 
 <style>
+  /* ---------- Hero ---------- */
   .hero {
     background: var(--degrade-hero);
-    color: var(--cor-texto-invertido);
-    padding: 6rem 0;
+    padding: 6.5rem 0 7rem;
+    min-height: 82vh;
+    display: flex;
+    align-items: center;
   }
 
-  .hero h1 {
-    color: var(--cor-texto-invertido);
-    font-size: 3rem;
+  .hero-layout {
+    display: grid;
+    grid-template-columns: 1.35fr 0.85fr;
+    align-items: center;
+    gap: 3rem;
+  }
+
+  .hero-texto .selo {
+    animation: subir 0.9s var(--ease) both;
+  }
+
+  .hero-titulo {
+    font-size: clamp(2.4rem, 5.6vw, 4.2rem);
+    line-height: 1.05;
     margin-bottom: 1.5rem;
-    line-height: 1.1;
-    max-width: 800px;
+  }
+
+  /* Cada palavra entra com um pequeno atraso */
+  .palavra {
+    display: inline-block;
+    opacity: 0;
+    animation: palavra-entra 0.9s var(--ease) forwards;
+    animation-delay: calc(var(--i) * 110ms + 200ms);
+  }
+
+  .palavra.destaque {
+    background: var(--degrade-marca-vivo);
+    background-size: 200% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation:
+      palavra-entra 0.9s var(--ease) forwards,
+      fluxo 5s linear infinite;
+    animation-delay: calc(var(--i) * 110ms + 200ms), 0s;
   }
 
   .hero-descricao {
-    font-size: 1.25rem;
-    max-width: 700px;
-    margin-bottom: 2rem;
+    font-size: 1.2rem;
+    max-width: 620px;
+    margin-bottom: 2.25rem;
     color: var(--cor-texto-invertido-suave);
+    animation: subir 0.9s 0.7s var(--ease) both;
   }
 
-  .publico h2 {
-    margin-bottom: 2rem;
+  .hero-botoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    animation: subir 0.9s 0.9s var(--ease) both;
   }
 
+  /* ---------- Anel da logo ---------- */
+  .hero-visual {
+    display: flex;
+    justify-content: center;
+    animation: subir 1.2s 0.4s var(--ease) both;
+  }
+
+  .hero-anel {
+    width: min(100%, 400px);
+    aspect-ratio: 1;
+    /* parallax com o mouse (as variáveis --px e --py vêm do script) */
+    transform: translate(calc(var(--px, 0) * 22px), calc(var(--py, 0) * 22px))
+      rotateX(calc(var(--py, 0) * -8deg)) rotateY(calc(var(--px, 0) * 8deg));
+    transition: transform 0.3s ease-out;
+    filter: drop-shadow(0 0 40px rgba(31, 176, 232, 0.45));
+    animation: flutuar 6s ease-in-out infinite;
+  }
+
+  .hero-anel svg {
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+  }
+
+  .anel-giro,
+  .anel-pontilhado,
+  .anel-interno {
+    transform-origin: 200px 200px;
+  }
+
+  .anel-giro {
+    animation: girar 22s linear infinite;
+  }
+  .anel-pontilhado {
+    animation: girar 60s linear infinite reverse;
+  }
+  .anel-interno {
+    animation: girar 40s linear infinite reverse;
+  }
+  .letra-n {
+    filter: drop-shadow(0 0 14px rgba(34, 211, 238, 0.6));
+  }
+
+  /* ---------- Indicador de rolagem ---------- */
+  .rolar-dica {
+    position: absolute;
+    left: 50%;
+    bottom: 1.75rem;
+    translate: -50% 0;
+    opacity: 0.8;
+  }
+
+  .rolar-mouse {
+    display: block;
+    width: 24px;
+    height: 38px;
+    border: 2px solid rgba(255, 255, 255, 0.55);
+    border-radius: 14px;
+    position: relative;
+  }
+
+  .rolar-roda {
+    position: absolute;
+    top: 7px;
+    left: 50%;
+    width: 3px;
+    height: 7px;
+    margin-left: -1.5px;
+    border-radius: 2px;
+    background: var(--cor-ciano-claro);
+    animation: roda 1.8s ease-in-out infinite;
+  }
+
+  /* ---------- Letreiro ---------- */
+  .letreiro {
+    overflow: hidden;
+    background: var(--cor-fundo-escuro);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    padding: 1.1rem 0;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+
+  .letreiro-trilha {
+    display: flex;
+    width: max-content;
+    animation: letreiro 28s linear infinite;
+  }
+
+  .letreiro:hover .letreiro-trilha {
+    animation-play-state: paused;
+  }
+
+  .letreiro-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 1.25rem;
+    padding-right: 3rem;
+    font-family: var(--fonte-titulo);
+    font-size: 1.15rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--cor-texto-invertido-suave);
+    white-space: nowrap;
+  }
+
+  .losango {
+    display: block;
+    width: 9px;
+    height: 9px;
+    rotate: 45deg;
+    background: var(--cor-destaque);
+    box-shadow: 0 0 12px var(--cor-destaque);
+  }
+
+  /* ---------- Público ---------- */
   .texto-publico {
     margin-bottom: 0;
-    font-size: 1.125rem;
+    font-size: 1.2rem;
     color: var(--cor-texto-secundario);
+  }
+
+  /* ---------- Chamada final ---------- */
+  .chamada {
+    background: var(--degrade-hero);
+    padding: 5rem 0;
+    text-align: center;
+  }
+
+  .chamada-conteudo h2 {
+    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    max-width: 760px;
+    margin: 0 auto 1rem;
+  }
+
+  .chamada-conteudo p {
+    color: var(--cor-texto-invertido-suave);
+    font-size: 1.15rem;
+    margin-bottom: 2rem;
+  }
+
+  /* ---------- Animações ---------- */
+  @keyframes palavra-entra {
+    from {
+      opacity: 0;
+      transform: translateY(0.6em);
+      filter: blur(10px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+      filter: blur(0);
+    }
+  }
+
+  @keyframes subir {
+    from {
+      opacity: 0;
+      transform: translateY(26px);
+    }
+  }
+
+  @keyframes girar {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  @keyframes flutuar {
+    0%,
+    100% {
+      translate: 0 0;
+    }
+    50% {
+      translate: 0 -14px;
+    }
+  }
+
+  @keyframes roda {
+    0% {
+      opacity: 0;
+      transform: translateY(0);
+    }
+    30% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+  }
+
+  @keyframes letreiro {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+
+  @media (max-width: 860px) {
+    .hero {
+      min-height: auto;
+      padding: 4.5rem 0 6rem;
+    }
+    .hero-layout {
+      grid-template-columns: 1fr;
+    }
+    .hero-visual {
+      order: -1;
+    }
+    .hero-anel {
+      width: 190px;
+    }
+    .rolar-dica {
+      display: none;
+    }
   }
 </style>

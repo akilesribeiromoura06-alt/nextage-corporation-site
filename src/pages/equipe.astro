@@ -1,6 +1,7 @@
 ---
 import LayoutBase from '../layouts/LayoutBase.astro';
 import Cartao from '../components/Cartao.astro';
+import CabecalhoPagina from '../components/CabecalhoPagina.astro';
 import { empresa } from '../data/empresa.js';
 ---
 
@@ -8,24 +9,28 @@ import { empresa } from '../data/empresa.js';
   titulo="Nossa Equipe"
   descricao={`Conheça os profissionais por trás da ${empresa.nome}.`}
 >
+  <CabecalhoPagina
+    rotulo="Pessoas"
+    titulo="Nossa Equipe"
+    texto="Conheça os profissionais que transformam ideias em soluções tecnológicas."
+  />
+
   <section class="secao">
     <div class="container">
-      <div class="cabecalho-secao">
-        <h1>Nossa Equipe</h1>
-        <p>Conheça os profissionais que transformam ideias em soluções tecnológicas.</p>
-      </div>
-
       <div class="grid-equipe">
         {empresa.equipe.map((membro) => (
           <Cartao>
             <div class="card-membro-conteudo">
-              <img
-                src={membro.foto}
-                alt={membro.alt}
-                class="foto-perfil"
-                width="140"
-                height="140"
-              />
+              <div class="foto-anel">
+                <img
+                  src={membro.foto}
+                  alt={membro.alt}
+                  class="foto-perfil"
+                  width="140"
+                  height="140"
+                  loading="lazy"
+                />
+              </div>
               <div class="info-membro">
                 <h3>{membro.nome}</h3>
                 <span class="cargo">{membro.cargo}</span>
@@ -40,21 +45,11 @@ import { empresa } from '../data/empresa.js';
 </LayoutBase>
 
 <style>
-  .cabecalho-secao {
-    margin-bottom: 3rem;
-  }
-
-  .cabecalho-secao p {
-    font-size: 1.125rem;
-    color: var(--cor-texto-secundario);
-    max-width: 600px;
-  }
-
   .grid-equipe {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
     gap: 2rem;
-    max-width: 850px;
+    max-width: 750px;
     margin: 0 auto;
   }
 
@@ -65,27 +60,62 @@ import { empresa } from '../data/empresa.js';
     align-items: center;
   }
 
+  /* Anel em degradê que gira ao redor da foto */
+  .foto-anel {
+    position: relative;
+    width: 156px;
+    height: 156px;
+    margin-bottom: 1.5rem;
+    border-radius: 50%;
+    overflow: hidden;
+    display: grid;
+    place-items: center;
+  }
+
+  .foto-anel::before {
+    content: '';
+    position: absolute;
+    inset: -50%;
+    background: conic-gradient(
+      from 0deg,
+      var(--cor-destaque),
+      var(--cor-azul-vivo),
+      transparent 55%,
+      var(--cor-ciano-claro)
+    );
+    animation: girar 4s linear infinite;
+  }
+
   .foto-perfil {
-    width: 140px;
-    height: 140px;
+    position: relative;
+    width: 142px;
+    height: 142px;
     border-radius: 50%;
     object-fit: cover;
-    margin-bottom: 1.25rem;
-    border: 4px solid var(--cor-borda);
+    border: 4px solid var(--cor-fundo);
+    transition: transform 0.5s var(--ease);
+  }
+
+  :global(.cartao:hover) .foto-perfil {
+    transform: scale(1.06);
   }
 
   .info-membro h3 {
     font-size: 1.25rem;
-    margin-bottom: 0.25rem;
+    margin-bottom: 0.6rem;
   }
 
   .cargo {
     display: inline-block;
     color: var(--cor-secundaria);
-    font-size: 0.875rem;
-    font-weight: 700;
+    background: rgba(31, 176, 232, 0.1);
+    border: 1px solid rgba(31, 176, 232, 0.3);
+    padding: 0.25rem 0.8rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
+    letter-spacing: 0.06em;
     margin-bottom: 1rem;
   }
 
@@ -93,5 +123,11 @@ import { empresa } from '../data/empresa.js';
     font-size: 0.95rem;
     color: var(--cor-texto-secundario);
     margin-bottom: 0;
+  }
+
+  @keyframes girar {
+    to {
+      transform: rotate(360deg);
+    }
   }
 </style>

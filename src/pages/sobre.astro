@@ -1,6 +1,7 @@
 ---
 import LayoutBase from '../layouts/LayoutBase.astro';
 import Cartao from '../components/Cartao.astro';
+import CabecalhoPagina from '../components/CabecalhoPagina.astro';
 import { empresa } from '../data/empresa.js';
 ---
 
@@ -8,20 +9,32 @@ import { empresa } from '../data/empresa.js';
   titulo="Sobre Nós"
   descricao={`Conheça a história e os valores da ${empresa.nome}.`}
 >
+  <CabecalhoPagina
+    rotulo="Nossa história"
+    titulo={`Sobre a ${empresa.nome}`}
+    texto="Pessoas apaixonadas por tecnologia, criando soluções simples, eficientes e acessíveis."
+  />
+
   <section class="secao">
     <div class="container">
-      <div class="bloco-texto">
-        <h1>Sobre a {empresa.nome}</h1>
+      <div class="bloco-historia" data-reveal>
+        <span class="rotulo">Quem somos</span>
         <p class="historia">{empresa.historia}</p>
       </div>
 
       <div class="grid-missao-visao">
         <Cartao>
+          <span class="icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9" /><circle cx="12" cy="12" r="5" /><circle cx="12" cy="12" r="1.2" /></svg>
+          </span>
           <h2>Missão</h2>
           <p>{empresa.missao}</p>
         </Cartao>
 
         <Cartao>
+          <span class="icone">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7S2 12 2 12z" /><circle cx="12" cy="12" r="3" /></svg>
+          </span>
           <h2>Visão</h2>
           <p>{empresa.visao}</p>
         </Cartao>
@@ -31,10 +44,14 @@ import { empresa } from '../data/empresa.js';
 
   <section class="secao secao-alt">
     <div class="container">
-      <h2 class="titulo-valores">Nossos Valores</h2>
+      <div data-reveal>
+        <span class="rotulo">O que nos guia</span>
+        <h2 class="titulo-secao">Nossos Valores</h2>
+      </div>
       <div class="grid-valores">
-        {empresa.valores.map((valor) => (
+        {empresa.valores.map((valor, i) => (
           <Cartao destaque={true}>
+            <span class="numero">{String(i + 1).padStart(2, '0')}</span>
             <h3>{valor.titulo}</h3>
             <p>{valor.descricao}</p>
           </Cartao>
@@ -45,14 +62,18 @@ import { empresa } from '../data/empresa.js';
 </LayoutBase>
 
 <style>
-  .bloco-texto {
-    margin-bottom: 3rem;
-    max-width: 800px;
+  .bloco-historia {
+    max-width: 820px;
+    margin-bottom: 4rem;
+    padding-left: 1.75rem;
+    border-left: 4px solid transparent;
+    border-image: linear-gradient(180deg, var(--cor-destaque), var(--cor-azul-vivo)) 1;
   }
 
   .historia {
-    font-size: 1.125rem;
+    font-size: 1.2rem;
     color: var(--cor-texto-secundario);
+    margin-bottom: 0;
   }
 
   .grid-missao-visao {
@@ -62,23 +83,58 @@ import { empresa } from '../data/empresa.js';
   }
 
   .grid-missao-visao h2 {
-    font-size: 1.5rem;
+    font-size: 1.6rem;
     color: var(--cor-secundaria);
   }
 
-  .titulo-valores {
-    margin-bottom: 2rem;
+  .grid-missao-visao p {
+    margin-bottom: 0;
+  }
+
+  .icone {
+    display: grid;
+    place-items: center;
+    width: 52px;
+    height: 52px;
+    margin-bottom: 1.25rem;
+    border-radius: 14px;
+    color: #fff;
+    background: linear-gradient(135deg, var(--cor-secundaria), var(--cor-azul-vivo));
+    box-shadow: 0 10px 24px -10px rgba(31, 176, 232, 0.9);
+  }
+
+  .icone svg {
+    width: 26px;
+    height: 26px;
   }
 
   .grid-valores {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     gap: 2rem;
   }
 
+  .numero {
+    display: block;
+    font-family: var(--fonte-titulo);
+    font-size: 2.6rem;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 0.75rem;
+    background: var(--degrade-marca-vivo);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
   .grid-valores h3 {
-    font-size: 1.25rem;
-    color: var(--cor-secundaria);
+    font-size: 1.3rem;
+    color: var(--cor-primaria);
     margin-bottom: 0.5rem;
+  }
+
+  .grid-valores p {
+    margin-bottom: 0;
+    color: var(--cor-texto-secundario);
   }
 </style>

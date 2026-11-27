@@ -12,14 +12,41 @@ const { titulo, descricao } = Astro.props;
     <meta charset="utf-8" />
     <link rel="icon" type="image/png" href="/favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#0b1f3f" />
     <meta name="description" content={descricao} />
     <title>{titulo} | {empresa.nome}</title>
+
+    <!-- Fontes: Space Grotesk (títulos) e Inter (textos) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Space+Grotesk:wght@500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <!-- Avisa o CSS que o JavaScript está ativo (para as animações de revelar) -->
+    <script is:inline>
+      document.documentElement.classList.add('js');
+    </script>
   </head>
   <body>
+    <div class="barra-progresso" aria-hidden="true"></div>
+    <div class="cursor-brilho" aria-hidden="true"></div>
+
     <Header />
     <main>
       <slot />
     </main>
     <Footer />
+
+    <button class="btn-topo" type="button" aria-label="Voltar ao topo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 19V5M5 12l7-7 7 7" />
+      </svg>
+    </button>
+
+    <script>
+      import '../scripts/efeitos.js';
+    </script>
   </body>
 </html>
